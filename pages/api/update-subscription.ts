@@ -29,7 +29,7 @@ type SnoopInfo = {
     receivers: Array<SendingInfo>,
 }
 
-const getSnoopToInfo = async (): Promise<{ [key: string]: SnoopInfo }> => {
+const getSnoopToInfo = async (privyNode): Promise<{ [key: string]: SnoopInfo }> => {
     let newInfo: { [key: string]: SnoopInfo } = {}
 
     const data: GetBatchResponse = await privyNode.getBatch(SNOOP_FIELDS, { limit: 100000000000000 });
@@ -131,7 +131,7 @@ const check = async function (snoopToInfo: { [key: string]: SnoopInfo }, privyNo
 //signals that it's time to check privy's database again to update email subscriptions
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const privy = new PrivyClient(process.env.PRIVY_API_KEY, process.env.PRIVY_API_SECRET)
-    const snoopToInfo = await getSnoopToInfo();
+    const snoopToInfo = await getSnoopToInfo(privy);
     check(snoopToInfo, privy);
 
     res.status(200).json({ listening: true, updated: true });
