@@ -3,14 +3,11 @@ import Layout from '../components/layout'
 import UserHomePage from '../components/userHomePage'
 import PublicHomePage from '../components/publicHomePage'
 
-
 const Home = () => {
   const user = useUser()
 
-
   return (
     <Layout>
-
 
       {user ? <UserHomePage userEmail={user.email.toLowerCase()} /> : <PublicHomePage />}
 

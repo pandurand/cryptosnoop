@@ -19,7 +19,7 @@ const Login = () => {
     const body = {
       email: e.currentTarget.email.value,
     }
-    console.log(body);
+
     try {
       const magic = new Magic(process.env.NEXT_PUBLIC_MAGIC_PUBLISHABLE_KEY)
       const didToken = await magic.auth.loginWithMagicLink({
@@ -36,12 +36,9 @@ const Login = () => {
       if (res.status === 200) {
         Router.push('/')
       } else {
-        console.log(39);
         throw new Error(await res.text())
       }
     } catch (error) {
-      console.log(43);
-
       console.error('An unexpected error happened occurred:', error)
       setErrorMsg(error.message)
     }
