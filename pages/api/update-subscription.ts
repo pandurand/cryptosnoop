@@ -2,9 +2,15 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { ethers } from "ethers";
 import { privyNode } from '../../lib/privy';
 import { FieldInstance } from '@privy-io/privy-node';
-import level from 'level-ts';
+const Redis = require("ioredis");
 
-const prevBalances = new level('./database');
+let balances = new Redis(REDIS_URL);
+
+balances.on("error", function (err) {
+    throw err;
+});
+
+
 
 var provider = new ethers.providers.WebSocketProvider(process.env.INFURA_WS_URL);
 const etherscanProvider = new ethers.providers.EtherscanProvider('homestead', process.env.ETHERSCAN_KEY)
@@ -51,15 +57,15 @@ const check = async function (snoopToInfo: { [key: string]: SnoopInfo }) {
         console.log(address, receivers);
         const balance = await provider.getBalance(address)
         const eth = ethers.utils.formatEther(balance)
-        const hasFetchedBefore = await prevBalances.exists(address);
-        console.log(hasFetchedBefore, hasFetchedBefore && await prevBalances.get(address), eth)
+        const hasFetchedBefore = await balances.exists(address);
+        console.log(hasFetchedBefore, hasFetchedBefore && await balances.get(address), eth)
 
-        if (!hasFetchedBefore || eth == (await prevBalances.get(address))) {
+        if (!hasFetchedBefore || eth == (await balances.get(address))) {
             //hasn't changed balance.
-            await prevBalances.put(address, eth)
+            await balances.set(address, eth)
             return;
         }
-        await prevBalances.put(address, eth)
+        await balances.set(address, eth)
         //it's actually changed 
         await Promise.all(receivers.map(async ({ email, nickname }) => {
             console.log('sending to', email)
