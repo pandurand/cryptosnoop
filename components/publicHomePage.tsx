@@ -6,9 +6,9 @@ export default function PublicHomePage() {
             <h1>Welcome to Cryptosnoops!</h1>
 
             <p>
-                This demo allows you to 🌚 snoop 🌚 on Ethereum addresses.
-                You'll receive an email anytime a non-zero amount goes to or from one of the specified accounts,
-                with a link to the recent transaction.
+                {`This demo allows you to 🌚 snoop 🌚 on Ethereum addresses.
+                Youll receive an email anytime a non-zero amount goes to or from one of the specified accounts,
+                with a link to the recent transaction.`}
             </p>
             This Privy demo showcases the following Privy features:
             <ul>
@@ -28,7 +28,7 @@ export default function PublicHomePage() {
             <ol>
                 <li>Click Login and enter an email.</li>
                 <li>
-                    If it's your first time, go through the Magic passwordless email process. Keep the tab open.
+                    {`If it's your first time, go through the Magic passwordless email process. Keep the tab open.`}
                 </li>
                 <li>
                     Add your cryptosnoop subscriptions!
