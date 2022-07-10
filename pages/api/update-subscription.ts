@@ -2,8 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { ethers } from "ethers";
 import { privyNode } from '../../lib/privy';
 import { FieldInstance } from '@privy-io/privy-node';
-import { setIntervalAsync } from 'set-interval-async/dynamic'
-import async from 'async'
+import level from 'level-ts';
+
+const prevBalances = new level('./database');
 
 var provider = new ethers.providers.WebSocketProvider(process.env.INFURA_WS_URL);
 const etherscanProvider = new ethers.providers.EtherscanProvider('homestead', process.env.ETHERSCAN_KEY)
@@ -21,14 +22,9 @@ type SendingInfo = {
 }
 type SnoopInfo = {
     receivers: Array<SendingInfo>,
-    balance: null | string,
-    lastTx: null | string
 }
 
-let timer = null;
-let snoopToInfo: { [key: string]: SnoopInfo } = {}
-
-const updateSnoopToInfo = async () => {
+const getSnoopToInfo = async (): Promise<{ [key: string]: SnoopInfo }> => {
     let newInfo: { [key: string]: SnoopInfo } = {}
 
     const data: GetBatchResponse = await privyNode.getBatch(SNOOP_FIELDS, { limit: 100000000000000 });
@@ -38,59 +34,48 @@ const updateSnoopToInfo = async () => {
             if (!fieldInstance || !fieldInstance.text()) return;
             const { name, address } = JSON.parse(fieldInstance.text());
             if (!(address in newInfo)) {
-                newInfo[address] = { receivers: [], balance: snoopToInfo[address]?.balance, lastTx: snoopToInfo[address]?.lastTx, }
+                newInfo[address] = { receivers: [] }
             }
             newInfo[address].receivers.push({ email: user_id, nickname: name })
         })
     })
 
-    //clean up any deleted addresses 
-    snoopToInfo = newInfo;
+    return newInfo
 }
 
 
 
-function check([address, info], callback) {
-    const { receivers, balance: lastBalance, lastTx } = info;
-    console.log(address, receivers);
-    provider.getBalance(address).then(balance => {
+const check = async function (snoopToInfo: { [key: string]: SnoopInfo }) {
+    await Promise.all(Object.entries(snoopToInfo).map(async ([address, info]) => {
+        const { receivers } = info;
+        console.log(address, receivers);
+        const balance = await provider.getBalance(address)
         const eth = ethers.utils.formatEther(balance)
-        snoopToInfo[address].balance = eth;
+        const hasFetchedBefore = await prevBalances.exists(address);
+        console.log(hasFetchedBefore, hasFetchedBefore && await prevBalances.get(address), eth)
 
-        if (!lastBalance || eth == lastBalance) {
+        if (!hasFetchedBefore || eth == (await prevBalances.get(address))) {
             //hasn't changed balance.
-            return false;
+            await prevBalances.put(address, eth)
+            return;
         }
+        await prevBalances.put(address, eth)
         //it's actually changed 
-        return true;
-
-    }).then((triggerSend) => {
-        if (!triggerSend) return;
-        Promise.all(receivers.map(async ({ email, nickname }) => {
+        await Promise.all(receivers.map(async ({ email, nickname }) => {
             console.log('sending to', email)
-            return privyNode.sendEmail(email, `Cryptosnoops: New Ethereum Activity From ${nickname}`,
-                `https://etherscan.io/address/${address}
-                <br/>`)
-        })).then(callback());
-    })
+            return privyNode.sendEmail(email,
+                `Cryptosnoops: New Ethereum Activity From ${nickname}`,
+                `${nickname}'s account balance just changed! See their account here: https://etherscan.io/address/${address}
+                    <br/>
+                    Current balance: ${eth}
+                    <br/>
+                    You are receiving this email because you subscribed to address activity notifications on Privy's demo, Cryptosnoops.
+                    You may unsubscribe at any point by logging into <a href="https://demos.privy.io">Cryptosnoops</a> and deleting the subscription. `)
+        })).catch((e) => console.log(e));
+
+    }))
+
 }
-
-
-function init() {
-    timer = true;
-    setIntervalAsync(
-        () => {
-            async.map(Object.entries(snoopToInfo), check)
-        },
-        5000
-    )
-}
-
-if (!timer) {
-    init();
-}
-
-
 
 
 
@@ -140,12 +125,8 @@ if (!timer) {
 
 //signals that it's time to check privy's database again to update email subscriptions
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.query.startlistener && timer) {
-        res.status(200).json({ listening: true })
-        return;
-    }
-    await updateSnoopToInfo();
-
+    const snoopToInfo = await getSnoopToInfo();
+    check(snoopToInfo);
 
     res.status(200).json({ listening: true, updated: true });
 }
