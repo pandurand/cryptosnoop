@@ -76,57 +76,11 @@ const check = async function (snoopToInfo: { [key: string]: SnoopInfo }, privyNo
                     <br/>
                     You are receiving this email because you subscribed to address activity notifications on Privy's demo, Cryptosnoops.
                     You may unsubscribe at any point by logging into <a href="https://demos.privy.io">Cryptosnoops</a> and deleting the subscription. `)
-        })).catch((e) => console.log(e));
+        })).catch((e) => console.log(e, e.toString(), e.stack, e.message));
 
     }))
 
 }
-
-
-
-// const init = () => {
-//     return setInterval(async () => {
-//         await Promise.all(Object.entries(snoopToInfo).map(async function ([address, info]) {
-//             console.log('snoop', address, info)
-//             const { receivers, balance: lastBalance, lastTx } = info;
-//             const balance = await provider.getBalance(address)
-//             const eth = ethers.utils.formatEther(balance)
-//             if (!lastBalance || eth === lastBalance) {
-//                 snoopToInfo[address].balance = eth;
-//                 //hasn't changed balance.
-//                 return;
-//             }
-//             //it's actually changed 
-//             const blockStart = await provider.getBlockNumber() - 1;
-//             const history: Array<ethers.providers.TransactionResponse> = await etherscanProvider.getHistory(address, blockStart);
-//             let txHash = null;
-//             if (history.length > 0) {
-//                 const thisTxHash = history[history.length - 1].hash
-//                 if (thisTxHash !== lastTx) {
-//                     //avoid notifying about repeat transactions
-//                     txHash = thisTxHash;
-//                     snoopToInfo[address].lastTx = txHash;
-//                 }
-//             }
-//             console.log('txhash', txHash);
-//             snoopToInfo[address].balance = eth;
-
-//             await Promise.all(receivers.map(async ({ email, nickname }) => {
-//                 console.log('sending to', email)
-//                 await privyNode.sendEmail(email,
-//                     `Cryptosnoops: New Ethereum Activity From ${nickname}`,
-//                     `${nickname}'s account balance just changed! See their account here: https://etherscan.io/address/${address}
-//                     <br/>
-//                      ${txHash && `Most recent transaction: https://etherscan.io/tx/${txHash}`}
-//                     <br/>
-//                     You are receiving this email because you subscribed to address activity notifications on Privy's demo, Cryptosnoops.
-//                     You may unsubscribe at any point by logging into <a href="https://demos.privy.io">Cryptosnoops</a> and deleting the subscription. `)
-//             }))
-
-//         }));
-//     }, 11000)[Symbol.toPrimitive]()
-
-// };
 
 //signals that it's time to check privy's database again to update email subscriptions
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

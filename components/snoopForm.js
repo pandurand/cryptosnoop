@@ -7,7 +7,6 @@ export default function SnoopForm({ userEmail, allSnoops, getAllSnoops }) {
     const [address, setAddress] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
 
-
     async function handleSubmit(event) {
         event.preventDefault();
         if (!/^0x[a-fA-F0-9]{40}$/.test(address) || nameRef.current.value.length == 0) return;
@@ -23,6 +22,8 @@ export default function SnoopForm({ userEmail, allSnoops, getAllSnoops }) {
 
     return (
         <>
+            <div>Note: only a maximum of three snoop subscriptions may be added.</div>
+            <br />
 
             <Button
                 onClick={() => setModalOpen(true)}
@@ -30,6 +31,7 @@ export default function SnoopForm({ userEmail, allSnoops, getAllSnoops }) {
                 variant="outlined">
                 Add new snoop
             </Button>
+
             <Modal
                 open={modalOpen}
                 onClose={() => setModalOpen(false)}
@@ -82,7 +84,7 @@ export default function SnoopForm({ userEmail, allSnoops, getAllSnoops }) {
 }
 
 const style = {
-    position: 'absolute' as 'absolute',
+    position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
