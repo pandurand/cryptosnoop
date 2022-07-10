@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { ethers } from "ethers";
-import { privyNode } from '../../lib/privy';
-import { FieldInstance } from '@privy-io/privy-node';
+import { FieldInstance, PrivyClient } from '@privy-io/privy-node';
 const Redis = require("ioredis");
 
 let balances = new Redis(process.env.REDIS_URL);
@@ -51,7 +50,7 @@ const getSnoopToInfo = async (): Promise<{ [key: string]: SnoopInfo }> => {
 
 
 
-const check = async function (snoopToInfo: { [key: string]: SnoopInfo }) {
+const check = async function (snoopToInfo: { [key: string]: SnoopInfo }, privyNode) {
     await Promise.all(Object.entries(snoopToInfo).map(async ([address, info]) => {
         const { receivers } = info;
         console.log(address, receivers);
@@ -131,8 +130,9 @@ const check = async function (snoopToInfo: { [key: string]: SnoopInfo }) {
 
 //signals that it's time to check privy's database again to update email subscriptions
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    const privy = new PrivyClient(process.env.PRIVY_API_KEY, process.env.PRIVY_API_SECRET)
     const snoopToInfo = await getSnoopToInfo();
-    check(snoopToInfo);
+    check(snoopToInfo, privy);
 
     res.status(200).json({ listening: true, updated: true });
 }
