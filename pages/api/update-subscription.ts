@@ -91,7 +91,7 @@ const check = async function (snoopToInfo: { [key: string]: SnoopInfo }, privyNo
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const privy = new PrivyClient(process.env.PRIVY_API_KEY, process.env.PRIVY_API_SECRET)
     const snoopToInfo = await getSnoopToInfo(privy);
-    check(snoopToInfo, privy);
+    await check(snoopToInfo, privy);
 
     res.status(200).json({ listening: true, updated: true });
 }
