@@ -16,7 +16,7 @@ const Header = () => {
           {user ? (
             <>
               <li>
-                <a href="/api/logout">Logout</a>
+                <Link href="/api/logout"><a>Logout</a></Link>
               </li>
             </>
           ) : (
