@@ -7,12 +7,34 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
+    "@hapi/iron": "^7.0.0",
+    "@magic-sdk/admin": "1.0.0",
+    "@mui/material": "^5.8.7",
+    "@privy-io/privy-browser": "^0.0.1",
+    "@privy-io/privy-node": "^0.0.1",
+    "cookie": "0.4.0",
+    "decimal.js": "^7.2.4",
+    "dotenv-safe": "^4.0.3",
+    "ethers": "5.0.5",
+    "magic-sdk": "1.0.1",
     "next": "12.1.4",
+    "next-connect": "^1.0.0-next.1",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
     "react": "18.0.0",
-    "react-dom": "18.0.0"
+    "react-dom": "18.0.0",
+    "swr": "^1.3.0",
+    "uuid": "^8.3.2",
+    "web3": "^1.7.4"
   },
   "devDependencies": {
+    "@types/node": "^18.0.1",
+    "@types/react": "18.0.1",
+    "@types/set-interval-async": "^1.0.0",
     "eslint": "8.12.0",
-    "eslint-config-next": "12.1.4"
+    "eslint-config-next": "12.1.4",
+    "typescript": "^4.7.4"
   }
 }
