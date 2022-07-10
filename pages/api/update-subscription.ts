@@ -68,15 +68,20 @@ const check = async function (snoopToInfo: { [key: string]: SnoopInfo }, privyNo
         //it's actually changed 
         await Promise.all(receivers.map(async ({ email, nickname }) => {
             console.log('sending to', email)
-            return privyNode.sendEmail(email,
-                `Cryptosnoops: New Ethereum Activity From ${nickname}`,
-                `${nickname}'s account balance just changed! See their account here: https://etherscan.io/address/${address}
-                    <br/>
-                    Current balance: ${eth}
-                    <br/>
-                    You are receiving this email because you subscribed to address activity notifications on Privy's demo, Cryptosnoops.
-                    You may unsubscribe at any point by logging into <a href="https://demos.privy.io">Cryptosnoops</a> and deleting the subscription. `)
-        })).catch((e) => console.log(e, e.toString(), e.stack, e.message));
+            try {
+                await privyNode.sendEmail(email,
+                    `Cryptosnoops: New Ethereum Activity From ${nickname}`,
+                    `${nickname}'s account balance just changed! See their account here: https://etherscan.io/address/${address}
+                        <br/>
+                        Current balance: ${eth}
+                        <br/>
+                        You are receiving this email because you subscribed to address activity notifications on Privy's demo, Cryptosnoops.
+                        You may unsubscribe at any point by logging into <a href="https://demos.privy.io">Cryptosnoops</a> and deleting the subscription. `
+                )
+            } catch (e) {
+                console.log(e);
+            }
+        }));
 
     }))
 
