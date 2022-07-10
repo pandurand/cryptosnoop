@@ -22,7 +22,7 @@ export default function SnoopForm({ userEmail, allSnoops, getAllSnoops }) {
 
     return (
         <>
-            <div>Note: only a maximum of three snoop subscriptions may be added.</div>
+            <div>Note: only a maximum of three snoop subscriptions may be added. Please allow up to two minutes for receive an email after a transaction takes place. </div>
             <br />
 
             <Button
