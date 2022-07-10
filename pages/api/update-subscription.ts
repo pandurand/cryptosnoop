@@ -4,7 +4,7 @@ import { privyNode } from '../../lib/privy';
 import { FieldInstance } from '@privy-io/privy-node';
 const Redis = require("ioredis");
 
-let balances = new Redis(REDIS_URL);
+let balances = new Redis(process.env.REDIS_URL);
 
 balances.on("error", function (err) {
     throw err;
