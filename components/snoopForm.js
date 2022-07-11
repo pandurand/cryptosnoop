@@ -6,7 +6,6 @@ export default function SnoopForm({ userEmail, allSnoops, getAllSnoops }) {
     const nameRef = useRef(null);
     const [address, setAddress] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
-
     async function handleSubmit(event) {
         event.preventDefault();
         if (!/^0x[a-fA-F0-9]{40}$/.test(address) || nameRef.current.value.length == 0) return;

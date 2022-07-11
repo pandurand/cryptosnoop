@@ -13,9 +13,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         return;
     }
     const emailAddress = session.email;
-    try {
-        await privyNode.get(emailAddress, 'email');
-    } catch {
+    const email = await privyNode.get(emailAddress, 'email');
+    if (!email) {
         await privyNode.put(emailAddress, 'email', emailAddress);
     }
     const token = await privyNode.createAccessToken(emailAddress);
