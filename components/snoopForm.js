@@ -17,7 +17,7 @@ export default function SnoopForm({ userEmail, allSnoops, getAllSnoops }) {
             body: JSON.stringify(userEmail),
         })
         setModalOpen(false);
-        getAllSnoops();
+        await getAllSnoops();
     }
 
     return (
@@ -74,9 +74,7 @@ export default function SnoopForm({ userEmail, allSnoops, getAllSnoops }) {
 
                         </Grid>
                     </form>
-
                 </Box>
-
             </Modal >
         </>
 
