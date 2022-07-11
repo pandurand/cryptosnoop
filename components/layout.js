@@ -14,8 +14,10 @@ const Layout = (props) => (
       <div className="container">{props.children}</div>
     </main>
 
-    <footer>
+    <footer >
       <a href="https://github.com/privy-io/cryptosnoop">Github repo</a>
+      |
+      <a href="https://privy.io">Privy</a>
     </footer>
 
     <style jsx global>{`
@@ -43,6 +45,9 @@ const Layout = (props) => (
         display: flex;
         justify-content: center;
         align-items: center;
+      }
+      footer a {
+        padding: 20px;
       }
     `}</style>
   </>

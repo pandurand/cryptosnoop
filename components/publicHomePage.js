@@ -9,7 +9,7 @@ export default function PublicHomePage() {
                 Youll receive an email anytime a non-zero amount goes to or from one of the specified accounts,
                 with a link to the recent transaction.`}
             </p>
-            This Privy demo showcases the following Privy features:
+            <h3>This Privy demo showcases the following Privy API features:</h3>
             <ul>
                 <li>
                     <a href="https://docs.privy.io/guide/authentication/authentication-in-privy">Privy integration with a third-party non-wallet auth</a> system (<a href="https://magic.link">Magic</a>)
@@ -23,9 +23,9 @@ export default function PublicHomePage() {
                 </li>
 
             </ul>
-            How to use:
+            <h3>How to use:</h3>
             <ol>
-                <li>Click Login and enter an email.</li>
+                <li>Click Login (top right) and enter an email.</li>
                 <li>
                     {`If it's your first time, go through the Magic passwordless email process. Keep the tab open.`}
                 </li>

@@ -13,12 +13,11 @@ function ActiveSnoop({ userId, info, snoopNumber, refreshSnoops }) {
         await fetch('/api/update-subscription', {
             method: 'POST',
         })
-        refreshSnoops();
+        await refreshSnoops();
     }
 
     return (
         <TableRow
-            key={snoopNumber}
             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
         >
             <TableCell component="th" scope="row">
@@ -44,10 +43,7 @@ export default function UserHomePage({ userEmail }) {
         if (!privy.client) {
             const session = new CustomSession(async function authenticate() {
                 //go fetch access token
-                const response = await fetch('/api/privy/token', {
-                    body: JSON.stringify(userEmail),
-                    method: 'POST'
-                })
+                const response = await fetch('/api/privy/token')
 
                 return (await response.json()).token
             });
@@ -69,11 +65,11 @@ export default function UserHomePage({ userEmail }) {
                                 <TableCell>Nickname</TableCell>
                                 <TableCell >Address</TableCell>
                                 <TableCell ></TableCell>
-
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {allSnoops.map((info, i) => info && info.text().length > 0 && <ActiveSnoop refreshSnoops={getAllSnoops} snoopNumber={i} userId={userEmail} info={info} />)}
+                            {allSnoops.map((info, i) => info && info.text().length > 0 &&
+                                <ActiveSnoop key={i} refreshSnoops={getAllSnoops} snoopNumber={i} userId={userEmail} info={info} />)}
                         </TableBody>
                     </Table>
                 </TableContainer>
@@ -85,4 +81,3 @@ export default function UserHomePage({ userEmail }) {
         </>
     )
 }
-
