@@ -11,7 +11,7 @@ export default function SnoopForm({ userEmail, allSnoops, getAllSnoops }) {
         if (!/^0x[a-fA-F0-9]{40}$/.test(address) || nameRef.current.value.length == 0) return;
         const emptyField = FIELD_NAME_PREFIX + allSnoops.findIndex((info) => !info || !info.text());
         await privy.client.put(userEmail, emptyField, JSON.stringify({ name: nameRef.current.value, address: address.toLowerCase() }))
-        await fetch('/api/update-subscription', {
+        await fetch(`${process.env.BASE_PATH}/api/update-subscription`, {
             method: 'POST',
             body: JSON.stringify(userEmail),
         })
