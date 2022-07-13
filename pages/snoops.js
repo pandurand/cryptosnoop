@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react"
 import SnoopForm from "../components/snoopForm";
 import { Button, TableContainer, TableRow, TableCell, TableBody, Table, Paper, TableHead } from '@mui/material'
-import { PrivyClient, CustomSession } from "@privy-io/privy-browser";
-import { privy, MAX_NUM_SNOOPS, FIELD_NAME_PREFIX } from '../components/helpers';
+import { MAX_NUM_SNOOPS, FIELD_NAME_PREFIX } from '../components/helpers';
 import { useUser } from "../lib/hooks";
 import Router from "next/router";
 import Layout from "../components/layout";
@@ -11,7 +10,7 @@ const SNOOP_FIELDS = Array.apply(null, Array(MAX_NUM_SNOOPS)).map((_, i) => `${F
 function ActiveSnoop({ userId, info, snoopNumber, refreshSnoops }) {
     info = JSON.parse(info.text());
     async function handleUnsubscribe() {
-        await privy.client.put(userId, FIELD_NAME_PREFIX + snoopNumber, '') //empty string means deletion
+        await user.client.put(userId, FIELD_NAME_PREFIX + snoopNumber, '') //empty string means deletion
 
         await fetch(`${process.env.BASE_PATH}/api/update-subscription`, {
             method: 'POST',
@@ -39,7 +38,7 @@ export default function UserHomePage() {
     const [allSnoops, setAllSnoops] = useState([]);
 
     const getAllSnoops = async () => {
-        const snoops = await privy.client.get(user.email, SNOOP_FIELDS)
+        const snoops = await user.client.get(user.email, SNOOP_FIELDS)
         setAllSnoops(snoops)
     }
 
@@ -47,16 +46,6 @@ export default function UserHomePage() {
         if (!user) {
             Router.replace('/')
             return;
-        }
-        if (!privy.client) {
-            privy.client = new PrivyClient({
-                session: new CustomSession(async function authenticate() {
-                    //go fetch access token
-                    const response = await fetch(`${process.env.BASE_PATH}/api/privy/token`)
-
-                    return (await response.json()).token
-                })
-            });
         }
         getAllSnoops()
     }, [])
