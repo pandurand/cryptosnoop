@@ -13,7 +13,7 @@ function ActiveSnoop({ userId, info, snoopNumber, refreshSnoops }) {
     async function handleUnsubscribe() {
         await privy.client.put(userId, FIELD_NAME_PREFIX + snoopNumber, '') //empty string means deletion
 
-        await fetch('/api/update-subscription', {
+        await fetch(`${process.env.BASE_PATH}/api/update-subscription`, {
             method: 'POST',
         })
         await refreshSnoops();
@@ -52,7 +52,7 @@ export default function UserHomePage() {
             privy.client = new PrivyClient({
                 session: new CustomSession(async function authenticate() {
                     //go fetch access token
-                    const response = await fetch('/api/privy/token')
+                    const response = await fetch(`${process.env.BASE_PATH}/api/privy/token`)
 
                     return (await response.json()).token
                 })
