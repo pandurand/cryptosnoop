@@ -34,7 +34,7 @@ function ActiveSnoop({ userId, info, snoopNumber, refreshSnoops }) {
 const hasActiveSnoops = (allSnoops) => allSnoops.filter(info => info && info.text().length).length > 0
 
 export default function UserHomePage() {
-    const user = useUser({ redirectTo: '/' })
+    const user = useUser({ redirectTo: `${process.env.BASE_PATH}/` })
     const [allSnoops, setAllSnoops] = useState([]);
 
     const getAllSnoops = async () => {
@@ -44,7 +44,7 @@ export default function UserHomePage() {
 
     useEffect(() => {
         if (!user) {
-            Router.replace('/')
+            Router.replace(`${process.env.BASE_PATH}/`)
             return;
         }
         getAllSnoops()
