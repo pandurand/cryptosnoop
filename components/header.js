@@ -16,10 +16,10 @@ const Header = () => {
           {user ? (
             <>
               <li>
-                <Link href="/snoops"><a>Snoops</a></Link>
+                <Link href={`/snoops`}><a>Snoops</a></Link>
               </li>
               <li>
-                <Link href={`${process.env.BASE_PATH}/api/logout`}><a>Logout</a></Link>
+                <Link href={`/api/logout`}><a>Logout</a></Link>
               </li>
             </>
           ) : (

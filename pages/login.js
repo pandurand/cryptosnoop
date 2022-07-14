@@ -7,7 +7,7 @@ import Form from '../components/form'
 import { Magic } from 'magic-sdk'
 
 const Login = () => {
-  useUser({ redirectTo: '/', redirectIfFound: true })
+  useUser({ redirectTo: `${process.env.BASE_PATH}/`, redirectIfFound: true })
 
   const [errorMsg, setErrorMsg] = useState('')
 
