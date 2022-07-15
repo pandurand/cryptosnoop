@@ -38,6 +38,7 @@ export default function UserHomePage() {
     const [allSnoops, setAllSnoops] = useState([]);
 
     const getAllSnoops = async () => {
+        console.log('user.client', user.client)
         const snoops = await user.client.get(user.email, SNOOP_FIELDS)
         setAllSnoops(snoops)
     }
