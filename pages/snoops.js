@@ -7,10 +7,10 @@ import Router from "next/router";
 import Layout from "../components/layout";
 const SNOOP_FIELDS = Array.apply(null, Array(MAX_NUM_SNOOPS)).map((_, i) => `${FIELD_NAME_PREFIX}${i}`)
 
-function ActiveSnoop({ userId, info, snoopNumber, refreshSnoops }) {
+function ActiveSnoop({ user, info, snoopNumber, refreshSnoops }) {
     info = JSON.parse(info.text());
     async function handleUnsubscribe() {
-        await user.client.put(userId, FIELD_NAME_PREFIX + snoopNumber, '') //empty string means deletion
+        await user.client.put(user.email, FIELD_NAME_PREFIX + snoopNumber, '') //empty string means deletion
 
         await fetch(`${process.env.BASE_PATH}/api/update-subscription`, {
             method: 'POST',
@@ -66,7 +66,7 @@ export default function UserHomePage() {
                             </TableHead>
                             <TableBody>
                                 {allSnoops.map((info, i) => info && info.text().length > 0 &&
-                                    <ActiveSnoop key={i} refreshSnoops={getAllSnoops} snoopNumber={i} userId={user.email} info={info} />)}
+                                    <ActiveSnoop key={i} refreshSnoops={getAllSnoops} snoopNumber={i} user={user} info={info} />)}
                             </TableBody>
                         </Table>
                     </TableContainer>
