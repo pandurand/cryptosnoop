@@ -1,4 +1,17 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Cryptosnoops Privy Demo 
+
+This demo allows you to 🌚 snoop 🌚 on Ethereum addresses. Youll receive an email anytime a non-zero amount goes to or from one of the specified accounts, with a link to the recent transaction.
+
+## Privy features
+
+This Privy demo showcases the following Privy API features:
+- Privy integration with a third-party non-wallet auth system (Magic)
+- Issuing access tokens from server-side to front-end
+- The sendEmail API
+
+`get` and `put` calls to Privy happen both in the frontend and backend. The frontend uses `privy-browser` npm package, and the backend uses the `privy-node` package. The backend additionally uses the `sendEmail` Privy functionality. 
+
+Additionally, this demo uses two other resources: a Google Cloud Scheduler cron job, and a Serverless Redis instance for non-sensitive data (most recent account balance for an Ethereum address). This shows that Privy can be compatible with your existing databases, if you have them. With that in mind, if you're looking for a simple demo of Privy, you may want to start with one of the other [demos](https://demos.privy.io). 
 
 ## Getting Started
 
@@ -12,23 +25,5 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
