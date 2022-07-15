@@ -3,8 +3,8 @@ import { Grid, TextField, Button, Modal, Box, } from '@mui/material'
 import { useSession } from "../lib/hooks";
 import { FIELD_NAME_PREFIX, MAX_NUM_SNOOPS } from './helpers'
 
-export default function SnoopForm({ userEmail, allSnoops, getAllSnoops }) {
-    const user = useSession();
+export default function SnoopForm({ allSnoops, getAllSnoops }) {
+    const user = useSession({ redirectTo: '/' });
     const nameRef = useRef(null);
     const [address, setAddress] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
@@ -12,11 +12,8 @@ export default function SnoopForm({ userEmail, allSnoops, getAllSnoops }) {
         event.preventDefault();
         if (!/^0x[a-fA-F0-9]{40}$/.test(address) || nameRef.current.value.length == 0) return;
         const emptyField = FIELD_NAME_PREFIX + allSnoops.findIndex((info) => !info || !info.text());
-        await user.client.put(userEmail, emptyField, JSON.stringify({ name: nameRef.current.value, address: address.toLowerCase() }))
-        await fetch(`${process.env.BASE_PATH}/api/update-subscription`, {
-            method: 'POST',
-            body: JSON.stringify(userEmail),
-        })
+        await user.client.put(user.email, emptyField, JSON.stringify({ name: nameRef.current.value, address: address.toLowerCase() }))
+        await fetch(`${process.env.BASE_PATH}/api/update-subscription`)
         setModalOpen(false);
         await getAllSnoops();
     }

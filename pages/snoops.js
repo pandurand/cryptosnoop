@@ -74,7 +74,7 @@ export default function UserHomePage() {
                     <div>Your active subscriptions will be shown here. Click the button below to subscribe to email notifications whenever an Ethereum address of your choice has account activity!</div>
                 }
                 <br />
-                <SnoopForm userEmail={user.email} allSnoops={allSnoops} getAllSnoops={getAllSnoops} />
+                <SnoopForm allSnoops={allSnoops} getAllSnoops={getAllSnoops} />
             </Layout>
 
         </>
