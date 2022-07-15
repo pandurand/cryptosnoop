@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import SnoopForm from "../components/snoopForm";
 import { Button, TableContainer, TableRow, TableCell, TableBody, Table, Paper, TableHead } from '@mui/material'
 import { MAX_NUM_SNOOPS, FIELD_NAME_PREFIX } from '../components/helpers';
-import { useUser } from "../lib/hooks";
+import { useSession } from "../lib/hooks";
 import Router from "next/router";
 import Layout from "../components/layout";
 const SNOOP_FIELDS = Array.apply(null, Array(MAX_NUM_SNOOPS)).map((_, i) => `${FIELD_NAME_PREFIX}${i}`)
@@ -34,7 +34,7 @@ function ActiveSnoop({ userId, info, snoopNumber, refreshSnoops }) {
 const hasActiveSnoops = (allSnoops) => allSnoops.filter(info => info && info.text().length).length > 0
 
 export default function UserHomePage() {
-    const user = useUser({ redirectTo: `/` })
+    const user = useSession({ redirectTo: `/` })
     const [allSnoops, setAllSnoops] = useState([]);
 
     const getAllSnoops = async () => {

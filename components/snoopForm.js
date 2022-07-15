@@ -1,10 +1,10 @@
 import { useRef, useState } from 'react';
 import { Grid, TextField, Button, Modal, Box, } from '@mui/material'
-import { useUser } from "../lib/hooks";
+import { useSession } from "../lib/hooks";
 import { FIELD_NAME_PREFIX, MAX_NUM_SNOOPS } from './helpers'
 
 export default function SnoopForm({ userEmail, allSnoops, getAllSnoops }) {
-    const user = useUser();
+    const user = useSession();
     const nameRef = useRef(null);
     const [address, setAddress] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
