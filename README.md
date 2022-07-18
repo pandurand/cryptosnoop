@@ -25,16 +25,16 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### Key spots in the code to point out: 
+### Check out:
 
-Check out: 
 - `lib/hooks.js` for instantiating the Privy client with a custom session
 - `/pages/api/update-subscription.ts` for getting all user data from Privy with `getBatch()`, and `sendEmail` usage after fetching the latest account balance via `ethers.js`
 - `pages/api/privy/token.ts` for returning the token for the user authenticated via Magic
 - `components/snoopForm.js` for `put()` Privy user data 
 - `pages/snoops.js` for `get()` and `put()` Privy user data 
 
-### In order to get an instance of cryptosnoops running fully, you must: 
+### Dependencies
+In order to get an instance of cryptosnoops running fully, you must: 
 - go to https://magic.link and create an acccount 
 - port over the API keys from magic 
 - Make a Google Cloud account (free) and create a job on Google Cloud Scheduler, hitting the url {your-app-url}/api/update-subscription
