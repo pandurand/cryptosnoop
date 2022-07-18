@@ -25,5 +25,23 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+### Check out:
+
+- `lib/hooks.js` for instantiating the Privy client with a custom session
+- `/pages/api/update-subscription.ts` for getting all user data from Privy with `getBatch()`, and `sendEmail` usage after fetching the latest account balance via `ethers.js`
+- `pages/api/privy/token.ts` for returning the token for the user authenticated via Magic
+- `components/snoopForm.js` for `put()` Privy user data 
+- `pages/snoops.js` for `get()` and `put()` Privy user data 
+
+### Dependencies
+In order to get an instance of cryptosnoops running fully, you must: 
+- go to https://magic.link and create an acccount 
+- port over the API keys from magic 
+- Make a Google Cloud account (free) and create a job on Google Cloud Scheduler, hitting the url {your-app-url}/api/update-subscription
+- Make an upstash.com account, create a serverless Redis database (credit card required). Integrate Upstash with your Vercel project, and port Redis url into your .env 
+
+Remove instances of "${process.env.BASE_URL}" (it was used to put this demo on demos.privy.io)
+
+
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
