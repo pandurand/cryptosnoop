@@ -7,7 +7,7 @@ const Alert = forwardRef((props, ref) => {
 });
 Alert.displayName = "Alert";
 
-export default function SuccessSnackBar({ open, onClose, message }) {
+export function SuccessSnackBar({ open, onClose, message }) {
     return (
         <Snackbar
             open={open}

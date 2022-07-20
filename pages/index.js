@@ -5,7 +5,7 @@ const Home = () => {
   return (
     <Layout>
 
-      <h1>Welcome to Cryptosnoops!</h1>
+      <h1>Welcome to Cryptosnoop!</h1>
 
       <p>
         {`This demo allows you to 🌚 snoop 🌚 on Ethereum addresses.

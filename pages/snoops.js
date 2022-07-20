@@ -3,7 +3,6 @@ import SnoopForm from "../components/snoopForm";
 import { Button, TableContainer, TableRow, TableCell, TableBody, Table, Paper, TableHead } from '@mui/material'
 import { MAX_NUM_SNOOPS, FIELD_NAME_PREFIX } from '../components/helpers';
 import { useSession } from "../lib/hooks";
-import Router from "next/router";
 import Layout from "../components/layout";
 import { SuccessSnackBar } from "../components/successSnackbar";
 const SNOOP_FIELDS = Array.apply(null, Array(MAX_NUM_SNOOPS)).map((_, i) => `${FIELD_NAME_PREFIX}${i}`)
@@ -13,7 +12,7 @@ const SNOOP_FIELDS = Array.apply(null, Array(MAX_NUM_SNOOPS)).map((_, i) => `${F
 const hasActiveSnoops = (allSnoops) => allSnoops.filter(info => info && info.text().length).length > 0
 
 export default function UserHomePage() {
-    const user = useSession({ redirectTo: `/` })
+    const user = useSession({})
     const [allSnoops, setAllSnoops] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
 
@@ -51,13 +50,8 @@ export default function UserHomePage() {
     }
 
     useEffect(() => {
-        if (!user) {
-            Router.replace(`/`)
-            return;
-        }
-        getAllSnoops()
-    }, [])
-    // if (user) getAllSnoops()
+        if (user) getAllSnoops()
+    }, [user])
 
     return (user &&
         <>
