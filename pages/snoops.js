@@ -50,8 +50,6 @@ export default function UserHomePage() {
         )
     }
 
-
-
     useEffect(() => {
         if (!user) {
             Router.replace(`/`)
@@ -59,6 +57,7 @@ export default function UserHomePage() {
         }
         getAllSnoops()
     }, [])
+    // if (user) getAllSnoops()
 
     return (user &&
         <>
