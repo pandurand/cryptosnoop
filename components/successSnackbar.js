@@ -5,6 +5,7 @@ import { forwardRef } from 'react'
 const Alert = forwardRef((props, ref) => {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+Alert.displayName = "Alert";
 
 export default function SuccessSnackBar({ open, onClose, message }) {
     return (
