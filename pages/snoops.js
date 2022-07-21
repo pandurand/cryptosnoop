@@ -3,52 +3,55 @@ import SnoopForm from "../components/snoopForm";
 import { Button, TableContainer, TableRow, TableCell, TableBody, Table, Paper, TableHead } from '@mui/material'
 import { MAX_NUM_SNOOPS, FIELD_NAME_PREFIX } from '../components/helpers';
 import { useSession } from "../lib/hooks";
-import Router from "next/router";
 import Layout from "../components/layout";
+import { SuccessSnackBar } from "../components/successSnackbar";
 const SNOOP_FIELDS = Array.apply(null, Array(MAX_NUM_SNOOPS)).map((_, i) => `${FIELD_NAME_PREFIX}${i}`)
 
-function ActiveSnoop({ user, info, snoopNumber, refreshSnoops }) {
-    info = JSON.parse(info.text());
-    async function handleUnsubscribe() {
-        await user.client.put(user.email, FIELD_NAME_PREFIX + snoopNumber, '') //empty string means deletion
 
-        await fetch(`${process.env.BASE_PATH}/api/update-subscription`, {
-            method: 'POST',
-        })
-        await refreshSnoops();
-    }
-
-    return (
-        <TableRow
-            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-        >
-            <TableCell component="th" scope="row">
-                {info.name}
-            </TableCell>
-            <TableCell >{info.address}</TableCell>
-            <TableCell><Button onClick={handleUnsubscribe}>Unsubscribe</Button></TableCell>
-        </TableRow>
-    )
-}
 
 const hasActiveSnoops = (allSnoops) => allSnoops.filter(info => info && info.text().length).length > 0
 
 export default function UserHomePage() {
-    const user = useSession({ redirectTo: `/` })
+    const user = useSession({})
     const [allSnoops, setAllSnoops] = useState([]);
+    const [successMessage, setSuccessMessage] = useState('');
 
     const getAllSnoops = async () => {
         const snoops = await user.client.get(user.email, SNOOP_FIELDS)
         setAllSnoops(snoops)
     }
 
-    useEffect(() => {
-        if (!user) {
-            Router.replace(`/`)
-            return;
+    function ActiveSnoop({ info, snoopNumber }) {
+        info = JSON.parse(info.text());
+        async function handleUnsubscribe() {
+            await user.client.put(user.email, FIELD_NAME_PREFIX + snoopNumber, '') //empty string means deletion
+            await fetch(`${process.env.BASE_PATH}/api/update-subscription`, {
+                method: 'POST',
+            })
+            await getAllSnoops();
+            await fetch(`${process.env.BASE_PATH}/api/send-confirmation`, {
+                method: 'POST',
+                body: JSON.stringify({ isSubscribing: false, userEmail: user.email, snoopName: info.name, snoopAddress: info.address }),
+            })
+            setSuccessMessage(info.name);
         }
-        getAllSnoops()
-    }, [])
+
+        return (
+            <TableRow
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+                <TableCell component="th" scope="row">
+                    {info.name}
+                </TableCell>
+                <TableCell >{info.address}</TableCell>
+                <TableCell><Button onClick={handleUnsubscribe}>Unsubscribe</Button></TableCell>
+            </TableRow>
+        )
+    }
+
+    useEffect(() => {
+        if (user) getAllSnoops()
+    }, [user])
 
     return (user &&
         <>
@@ -66,7 +69,7 @@ export default function UserHomePage() {
                             </TableHead>
                             <TableBody>
                                 {allSnoops.map((info, i) => info && info.text().length > 0 &&
-                                    <ActiveSnoop key={i} refreshSnoops={getAllSnoops} snoopNumber={i} user={user} info={info} />)}
+                                    <ActiveSnoop key={i} snoopNumber={i} info={info} />)}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -75,6 +78,11 @@ export default function UserHomePage() {
                 }
                 <br />
                 <SnoopForm allSnoops={allSnoops} getAllSnoops={getAllSnoops} />
+                <SuccessSnackBar
+                    open={Boolean(successMessage)}
+                    onClose={() => setSuccessMessage(null)}
+                    message={`You have successfully unsubscribed from ${successMessage}.`}
+                />
             </Layout>
 
         </>

@@ -34,7 +34,7 @@ const Login = () => {
         body: JSON.stringify(body),
       })
       if (res.status === 200) {
-        Router.push('/')
+        Router.push('/snoops')
       } else {
         throw new Error(await res.text())
       }

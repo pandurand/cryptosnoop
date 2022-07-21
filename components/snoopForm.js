@@ -2,19 +2,27 @@ import { useRef, useState } from 'react';
 import { Grid, TextField, Button, Modal, Box, } from '@mui/material'
 import { useSession } from "../lib/hooks";
 import { FIELD_NAME_PREFIX, MAX_NUM_SNOOPS } from './helpers'
+import { SuccessSnackBar } from './successSnackbar';
 
 export default function SnoopForm({ allSnoops, getAllSnoops }) {
     const user = useSession({ redirectTo: '/' });
     const nameRef = useRef(null);
     const [address, setAddress] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
+    const [successfulSnoop, setSuccessfulSnoop] = useState(null);
+
     async function handleSubmit(event) {
         event.preventDefault();
         if (!/^0x[a-fA-F0-9]{40}$/.test(address) || nameRef.current.value.length == 0) return;
         const emptyField = FIELD_NAME_PREFIX + allSnoops.findIndex((info) => !info || !info.text());
         await user.client.put(user.email, emptyField, JSON.stringify({ name: nameRef.current.value, address: address.toLowerCase() }))
         await fetch(`${process.env.BASE_PATH}/api/update-subscription`)
+        await fetch(`${process.env.BASE_PATH}/api/send-confirmation`, {
+            method: 'POST',
+            body: JSON.stringify({ isSubscribing: true, userEmail: user.email, snoopName: nameRef.current.value, snoopAddress: address }),
+        })
         setModalOpen(false);
+        setSuccessfulSnoop(nameRef.current.value);
         await getAllSnoops();
     }
 
@@ -74,6 +82,12 @@ export default function SnoopForm({ allSnoops, getAllSnoops }) {
                     </form>
                 </Box>
             </Modal >
+            <SuccessSnackBar
+                open={Boolean(successfulSnoop)}
+                onClose={() => setSuccessfulSnoop(null)}
+                message={`You have successfully subscribed to ${successfulSnoop}! You'll receive a confirmation email shortly.`}
+            />
+
         </>
 
     );
