@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # Cryptosnoops Privy Demo 
+=======
+# Cryptosnoop Privy Demo 
+>>>>>>> a223546338581913714cf15d4c7dcfe607842e1b
 
 This demo allows you to 🌚 snoop 🌚 on Ethereum addresses. Youll receive an email anytime a non-zero amount goes to or from one of the specified accounts, with a link to the recent transaction.
 
