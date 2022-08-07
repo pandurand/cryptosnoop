@@ -59,7 +59,6 @@ export default function UserHomePage() {
 
     useEffect(() => {
         if (!fetched.current && user) {
-            console.log(user);
             fetched.current = true;
             getAllSnoops()
         }
