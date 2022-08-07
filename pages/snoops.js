@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import SnoopForm from "../components/snoopForm";
+import Image from 'next/image'
 import { Button, TableContainer, TableRow, TableCell, TableBody, Table, Paper, TableHead } from '@mui/material'
 import { MAX_NUM_SNOOPS, FIELD_NAME_PREFIX } from '../components/helpers';
 import { useSession } from "../lib/hooks";
@@ -15,6 +16,7 @@ export default function UserHomePage() {
     const user = useSession({})
     const [allSnoops, setAllSnoops] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
+    let fetched = useRef(false);
 
     const getAllSnoops = async () => {
         const snoops = await user.client.get(user.email, SNOOP_FIELDS)
@@ -35,6 +37,7 @@ export default function UserHomePage() {
             })
             setSuccessMessage(info.name);
         }
+        const displayedAddress = info.address.substring(0, 7) + '...'
 
         return (
             <TableRow
@@ -43,14 +46,23 @@ export default function UserHomePage() {
                 <TableCell component="th" scope="row">
                     {info.name}
                 </TableCell>
-                <TableCell >{info.address}</TableCell>
+                <TableCell >
+                    <a href={`https://etherscan.io/address/${info.address}`}>
+                        {displayedAddress} <Image width={15} height={15} src="/newwindow.svg" />
+                    </a>
+
+                </TableCell>
                 <TableCell><Button onClick={handleUnsubscribe}>Unsubscribe</Button></TableCell>
-            </TableRow>
+            </ TableRow>
         )
     }
 
     useEffect(() => {
-        if (user) getAllSnoops()
+        if (!fetched.current && user) {
+            console.log(user);
+            fetched.current = true;
+            getAllSnoops()
+        }
     }, [user])
 
     return (user &&
@@ -59,7 +71,7 @@ export default function UserHomePage() {
                 <h1>Cryptosnoop subscriptions</h1>
                 {hasActiveSnoops(allSnoops) ?
                     <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 550 }} aria-label="simple table">
+                        <Table sx={{ minWidth: 350 }} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Nickname</TableCell>
