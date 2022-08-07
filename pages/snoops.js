@@ -48,7 +48,7 @@ export default function UserHomePage() {
                 </TableCell>
                 <TableCell >
                     <a href={`https://etherscan.io/address/${info.address}`}>
-                        {displayedAddress} <Image width={15} height={15} src="/newwindow.svg" />
+                        {displayedAddress} <Image width={15} height={15} src="../public/newwindow.svg" />
                     </a>
 
                 </TableCell>
